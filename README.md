@@ -115,3 +115,10 @@ npx prisma db push
 A módosítás után Vercelben indíts új Production deploymentet.
 
 A beszélgetések archiválása, némítása és törlése felhasználónként működik. A törlés a felhasználó saját listájából rejti el a beszélgetést, a másik résztvevő előzményeit nem törli. Az üzenetek módosítása csak a saját üzenetekre engedélyezett; törölni a saját üzenetet, illetve admin jogosultsággal más üzenetét is lehet. A törölt üzenet helyén törlési jelzés marad.
+
+
+## Luma Stories – galéria, kamera és képszerkesztő
+
+A Story létrehozásánál mobilon választható a telefon galériája vagy a kamera (`capture="environment"`). A kiválasztott kép közzététel előtt előnézetet kap, ahol 9:16-os Story nézetben forgatás, nagyítás/kicsinyítés, szűrők (eredeti, fekete-fehér, meleg, hideg, élénk) és képre írt szöveg állítható be. Közzétételkor a böngésző Canvas API-ja elkészíti a végleges képet, majd a meglévő aláírt Cloudinary feltöltési útvonalra küldi, végül létrehozza a 24 órás Story rekordot.
+
+A galéria/kamera funkció használatához a böngészőnek hozzáférést kell kapnia a fájlokhoz/kamerához, a képfeltöltéshez pedig a meglévő `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY` és `CLOUDINARY_API_SECRET` Vercel változók szükségesek.
