@@ -81,9 +81,3 @@ npx prisma generate
 npx prisma db push
 ```
 A sötét mód jelenleg a böngészőben futó felület állapota; a háttérkép, gyors reakció és becenév adatbázisba kerül, ezért minden résztvevő ugyanazt látja. A Stories képfeltöltéséhez jelenleg egy publikus HTTPS kép URL szükséges.
-
-## Luma alkalmazásikon és telepítés
-
-A `public/` mappában megtalálható az alkalmazás ikonja több méretben: `icon-192.png`, `icon-512.png`, `apple-touch-icon.png`, `favicon.ico`, valamint a webes faviconok. A `manifest.webmanifest` beállítja a telepíthető webalkalmazás nevét, színeit, megjelenítési módját és ikonjait. A Next.js metadata az ikont a böngészőfülön és iOS kezdőképernyőn is használja.
-
-A webalkalmazás telepítése: mobilon nyisd meg a webhelyet, majd válaszd a böngésző „Hozzáadás a kezdőképernyőhöz” / „Install app” lehetőségét.
