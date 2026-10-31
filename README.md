@@ -92,3 +92,26 @@ A Vercel projektben kötelező környezeti változók: `DATABASE_URL` (Neon Post
 A Prisma séma egyszeri telepítése a projekt mappájából: `npx prisma db push`. Ezt olyan terminálból futtasd, ahol a `DATABASE_URL` a Neon adatbázisra mutat. A Vercel Build Command maradhat: `npx prisma generate && next build`. A `postinstall` a Prisma Client generálását is lefuttatja telepítéskor. A `db push` nem fut automatikusan minden deploymentnél.
 
 Ha a regisztráció továbbra is hibát ad, a Vercel → Deployments → legutóbbi deployment → Functions / Runtime Logs naplóban keresd az `[auth/register]` sort.
+
+
+## Admin felhasználó és üdvözlő üzenet
+
+A regisztráció első alkalommal automatikusan létrehozza a Luma admin felhasználót, és minden új felhasználóhoz külön privát beszélgetést nyit. Az admin automatikus üdvözlő üzenetet küld; az üzenet szövege a `WELCOME_MESSAGE` környezeti változóval módosítható.
+
+Vercel Environment Variables:
+- `ADMIN_EMAIL` – az admin belépési e-mail-címe (ajánlott beállítani)
+- `ADMIN_USERNAME` – admin felhasználónév (ajánlott beállítani)
+- `ADMIN_NAME` – megjelenített név (opcionális, alapértelmezés: Luma Admin)
+- `ADMIN_PASSWORD` – admin jelszó (erősen ajánlott beállítani; ha nincs megadva, véletlenszerű, nem ismert jelszó készül)
+- `WELCOME_MESSAGE` – új felhasználónak küldött üdvözlő üzenet (opcionális)
+
+## Új funkciók adatbázis-frissítése
+
+A Prisma modell új mezőket kapott (`User.role`, `ChatMember.archivedAt`, `ChatMember.mutedUntil`, `ChatMember.deletedAt`, `Message.deletedAt`). A telepítés után egyszer futtasd:
+```bash
+npx prisma generate
+npx prisma db push
+```
+A módosítás után Vercelben indíts új Production deploymentet.
+
+A beszélgetések archiválása, némítása és törlése felhasználónként működik. A törlés a felhasználó saját listájából rejti el a beszélgetést, a másik résztvevő előzményeit nem törli. Az üzenetek módosítása csak a saját üzenetekre engedélyezett; törölni a saját üzenetet, illetve admin jogosultsággal más üzenetét is lehet. A törölt üzenet helyén törlési jelzés marad.
