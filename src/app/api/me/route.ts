@@ -1,0 +1,1 @@
+import {NextResponse} from 'next/server';import {currentUserId} from '@/lib/auth';import {db} from '@/lib/db';export async function GET(){const id=await currentUserId();if(!id)return NextResponse.json({user:null});const user=await db.user.findUnique({where:{id},select:{id:true,name:true,username:true,email:true,avatarUrl:true,bio:true}});return NextResponse.json({user});}
