@@ -1,10 +1,25 @@
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
-const secret = new TextEncoder().encode(process.env.AUTH_SECRET || 'dev-only-change-this-secret-before-deploying');
-export async function makeSession(userId:string) { return new SignJWT({userId}).setProtectedHeader({alg:'HS256'}).setIssuedAt().setExpirationTime('30d').sign(secret); }
-export async function currentUserId() {
- const token = (await cookies()).get('luma_session')?.value;
- if (!token) return null;
- try { return (await jwtVerify(token,secret)).payload.userId as string; } catch { return null; }
+
+function getSecret() {
+  const value = process.env.AUTH_SECRET;
+  if (!value || value.length < 32) throw new Error('AUTH_SECRET_MISSING_OR_TOO_SHORT');
+  return new TextEncoder().encode(value);
 }
-export async function requireUser() { const id=await currentUserId(); if(!id) throw new Error('UNAUTHORIZED'); return id; }
+
+export async function makeSession(userId: string) {
+  return new SignJWT({ userId }).setProtectedHeader({ alg: 'HS256' }).setIssuedAt().setExpirationTime('30d').sign(getSecret());
+}
+
+export async function currentUserId() {
+  const token = (await cookies()).get('luma_session')?.value;
+  if (!token) return null;
+  try { return (await jwtVerify(token, getSecret())).payload.userId as string; }
+  catch { return null; }
+}
+
+export async function requireUser() {
+  const id = await currentUserId();
+  if (!id) throw new Error('UNAUTHORIZED');
+  return id;
+}

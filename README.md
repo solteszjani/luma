@@ -81,3 +81,14 @@ npx prisma generate
 npx prisma db push
 ```
 A sötét mód jelenleg a böngészőben futó felület állapota; a háttérkép, gyors reakció és becenév adatbázisba kerül, ezért minden résztvevő ugyanazt látja. A Stories képfeltöltéséhez jelenleg egy publikus HTTPS kép URL szükséges.
+
+
+## Javított regisztráció és telepítési ellenőrzőlista
+
+A regisztrációs API hibáját javítottuk: korábban a teljes űrlap-adatot továbbította a Prisma `User.create()` hívásnak, így a nem létező `password` mező miatt a felhasználó létrehozása hibára futott. Most csak a Prisma-modell mezői kerülnek mentésre, a jelszó pedig kizárólag `passwordHash` formában.
+
+A Vercel projektben kötelező környezeti változók: `DATABASE_URL` (Neon PostgreSQL URL) és `AUTH_SECRET` (legalább 32 karakteres véletlenszerű titok).
+
+A Prisma séma egyszeri telepítése a projekt mappájából: `npx prisma db push`. Ezt olyan terminálból futtasd, ahol a `DATABASE_URL` a Neon adatbázisra mutat. A Vercel Build Command maradhat: `npx prisma generate && next build`. A `postinstall` a Prisma Client generálását is lefuttatja telepítéskor. A `db push` nem fut automatikusan minden deploymentnél.
+
+Ha a regisztráció továbbra is hibát ad, a Vercel → Deployments → legutóbbi deployment → Functions / Runtime Logs naplóban keresd az `[auth/register]` sort.
